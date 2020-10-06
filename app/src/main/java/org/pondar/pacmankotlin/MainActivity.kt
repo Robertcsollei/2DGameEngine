@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import org.pondar.pacmankotlin.Interfaces.DataTypes.Vector2D
 import java.util.*
 
 
@@ -20,9 +21,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnTouchList
     private var game: Game? = null
 
     val TimerFunction: Timer = Timer()
-
-    var updateMS = 10;
-
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -47,12 +45,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnTouchList
         }, 0, 10)
 
 
-
-
-       // mainHandler.post(updatePos)
-
-
-
     }
 
 
@@ -63,7 +55,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnTouchList
     val Update = Runnable {
         //TODO
         //Player Motion
-        game?.setPacPosition(10)
+        game?.setPacPosition()
         //Object Motion
         //Enemy Motion
         //Projectile Motion
@@ -104,26 +96,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnTouchList
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 
-        val x = event!!.x.toInt() -40
-        val y = event.y.toInt() -40
+        val midPoint = 40
 
-        when (event.action) {
+        when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
-                game?.InitialX = x
-                game?.InitialY = y
+                game?.initial = Vector2D(event.x, event.y)
                 game?.isMoving = !game?.isMoving!!
             }
             MotionEvent.ACTION_MOVE -> Log.d("", "")
             MotionEvent.ACTION_UP -> {
-                game?.EndX = x - game?.InitialX!!
-                game?.EndY = y - game?.InitialY!!
-                Log.i("TAG", "${game?.EndX} ${game?.EndY}")
 
+                game?.GesturePos = Vector2D(event.x, event.y).Substract(game?.initial)
+                Log.d("MATRIX", game?.GesturePos?.x.toString() + " " + game?.GesturePos?.y.toString())
                 if(game?.isMoving!!) {
-                    game?.setPacPosition(10)
+                    game?.setPacPosition()
                 }
 
-                //mainHandler.post(updatePos)
             }
         }
         gameView.invalidate()
