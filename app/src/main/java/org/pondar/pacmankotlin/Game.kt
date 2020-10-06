@@ -42,6 +42,7 @@ class Game(private var context: Context,view: TextView) {
         var coinRadius = 80.0
         var delCoin = -1
         //a reference to the gameview
+    //New line
         private var gameView: GameView? = null
         var screenXY = Vector2D()
 
